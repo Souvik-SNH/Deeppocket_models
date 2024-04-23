@@ -66,15 +66,18 @@ def test_model(model, ep, gmaker,  batch_size):
         tensor_shape = (batch_size,) + dims
         criterion = nn.CrossEntropyLoss()
         #create tensor for input, center and index
-        input_tensor = torch.zeros(tensor_shape, dtype=torch.float32, device='cuda', requires_grad=True)
-        float_labels = torch.zeros((batch_size,4), dtype=torch.float32, device='cuda')
+        #input_tensor = torch.zeros(tensor_shape, dtype=torch.float32, device='cuda', requires_grad=True)
+        #float_labels = torch.zeros((batch_size,4), dtype=torch.float32, device='cuda')
+        input_tensor = torch.zeros(tensor_shape, dtype=torch.float32, requires_grad=True)
+        float_labels = torch.zeros((batch_size,4), dtype=torch.float32 )
         count=0
         for batch in ep:
             count+=1
             # update float_labels with center and index values
             batch.extract_labels(float_labels)
             centers = float_labels[:,1:]
-            labels = float_labels[:,0].long().to('cuda')
+            #labels = float_labels[:,0].long().to('cuda')
+            labels = float_labels[:,0].long()
             for b in range(batch_size):
                 center = molgrid.float3(float(centers[b][0]),float(centers[b][1]),float(centers[b][2]))
                 # Update input tensor with b'th datapoint of the batch 
